@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f5f0">
+  <title>Hello World</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      background: #f4f5f0;
+      color: #17211c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      background: var(--page-background, #f4f5f0);
+      transition: background-color 320ms ease;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 2rem;
+      font-size: clamp(3rem, 10vw, 6.5rem);
+      line-height: 1;
+      font-weight: 750;
+    }
+
+    button {
+      min-height: 3.25rem;
+      padding: 0.85rem 1.4rem;
+      border: 0;
+      border-radius: 0.4rem;
+      background: #17211c;
+      color: #fff;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 650;
+      cursor: pointer;
+      transition: transform 140ms ease, background-color 140ms ease;
+    }
+
+    button:hover {
+      background: #2d4036;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button:focus-visible {
+      outline: 3px solid #17211c;
+      outline-offset: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Hello World</h1>
+    <button id="color-button" type="button">Change color</button>
+  </main>
+
+  <script>
+    const colorButton = document.querySelector("#color-button");
+
+    colorButton.addEventListener("click", () => {
+      const hue = Math.floor(Math.random() * 360);
+      document.body.style.setProperty("--page-background", `hsl(${hue} 52% 84%)`);
+    });
+  </script>
+</body>
+</html>
