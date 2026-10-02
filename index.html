@@ -3,92 +3,881 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f5f0">
-  <title>Hello World</title>
+  <meta name="theme-color" content="#111411">
+  <title>Gym Quest | Your training, leveled up</title>
   <style>
     :root {
-      color-scheme: light;
-      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
-      background: #f4f5f0;
-      color: #17211c;
+      color-scheme: dark;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      background: #111411;
+      color: #f2f4ed;
+      --bg: #111411;
+      --panel: #191d19;
+      --panel-raised: #20251f;
+      --line: #30362e;
+      --muted: #9ba395;
+      --quiet: #6e7669;
+      --lime: #c8f36a;
+      --orange: #ff9b62;
+      --blue: #83d3df;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       min-width: 320px;
       min-height: 100vh;
-      min-height: 100svh;
       margin: 0;
+      background-color: var(--bg);
+      background-image: linear-gradient(#ffffff05 1px, transparent 1px), linear-gradient(90deg, #ffffff05 1px, transparent 1px);
+      background-size: 42px 42px;
+    }
+
+    button { font: inherit; }
+
+    .app-shell {
+      width: min(1240px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 28px 0 52px;
+    }
+
+    .topbar {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 42px;
+    }
+
+    .brand, .season, .wallet-total, .streak-number, .xp-line, .section-title, .row-meta, .quest-reward, .shop-cost, .goal-line {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand { gap: 11px; }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
       display: grid;
       place-items: center;
-      background: var(--page-background, #f4f5f0);
-      transition: background-color 320ms ease;
+      border: 1px solid #c8f36a70;
+      border-radius: 11px;
+      color: var(--lime);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0;
+      transform: skew(-5deg);
     }
 
-    main {
-      padding: 2rem;
-      text-align: center;
+    .brand-name {
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: 21px;
+      letter-spacing: 0;
     }
+
+    .brand-name span { color: var(--lime); }
+
+    .season {
+      gap: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .season-mark {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 12px #c8f36a80;
+    }
+
+    .intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+      animation: rise-in 450ms ease both;
+    }
+
+    .eyebrow, .section-kicker {
+      margin: 0 0 9px;
+      color: var(--lime);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
 
     h1 {
-      margin: 0 0 2rem;
-      font-size: clamp(3rem, 10vw, 6.5rem);
+      margin-bottom: 0;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: clamp(34px, 5vw, 52px);
+      font-weight: 500;
       line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .intro-date {
+      padding-bottom: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .panel {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      animation: rise-in 480ms ease both;
+    }
+
+    .xp-panel { grid-column: span 7; padding: 23px 25px 22px; animation-delay: 40ms; }
+    .streak-panel { grid-column: span 5; padding: 23px 25px; animation-delay: 80ms; }
+    .daily-panel { grid-column: span 7; padding: 22px 25px; animation-delay: 120ms; }
+    .shop-panel { grid-column: span 5; padding: 22px 23px; animation-delay: 160ms; }
+    .weekly-panel { grid-column: span 12; padding: 22px 25px 24px; animation-delay: 200ms; }
+
+    .section-title {
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 14px;
       font-weight: 750;
     }
 
-    button {
-      min-height: 3.25rem;
-      padding: 0.85rem 1.4rem;
-      border: 0;
-      border-radius: 0.4rem;
-      background: #17211c;
-      color: #fff;
-      font: inherit;
-      font-size: 1rem;
+    .section-title .section-kicker { margin: 0; color: var(--quiet); }
+
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 21px;
+    }
+
+    .level-badge {
+      width: 70px;
+      height: 70px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border: 1px solid #c8f36a65;
+      border-radius: 18px;
+      background: #c8f36a0d;
+      color: var(--lime);
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: 29px;
+      line-height: 1;
+    }
+
+    .level-badge small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 8px;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .player-info { min-width: 0; }
+
+    .player-info h2 {
+      margin: 0 0 5px;
+      font-size: 20px;
+      font-weight: 760;
+    }
+
+    .player-info p { margin: 0; color: var(--muted); font-size: 12px; }
+
+    .xp-line {
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 11px;
       font-weight: 650;
+    }
+
+    .xp-line strong { color: #f2f4ed; font-weight: 750; }
+
+    .progress-track {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #343a31;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--lime);
+      box-shadow: 0 0 14px #c8f36a52;
+      transition: width 420ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .xp-footnote {
+      margin: 9px 0 0;
+      color: var(--quiet);
+      font-size: 10px;
+    }
+
+    .streak-panel {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: linear-gradient(125deg, #251e1a, #191d19 70%);
+    }
+
+    .streak-panel::after {
+      position: absolute;
+      top: -32px;
+      right: 12px;
+      width: 150px;
+      height: 150px;
+      border: 1px solid #ff9b6218;
+      border-radius: 50%;
+      content: "";
+      pointer-events: none;
+    }
+
+    .streak-content { position: relative; z-index: 1; }
+
+    .streak-number { gap: 13px; margin: 8px 0 3px; }
+
+    .flame-icon {
+      width: 39px;
+      height: 46px;
+      color: var(--orange);
+      filter: drop-shadow(0 0 12px #ff9b6250);
+    }
+
+    .streak-number strong {
+      color: var(--orange);
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: 47px;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .streak-caption { margin: 0; color: var(--muted); font-size: 12px; }
+
+    .primary-button, .secondary-button, .buy-button, .complete-button {
+      min-height: 39px;
+      border: 0;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 800;
       cursor: pointer;
-      transition: transform 140ms ease, background-color 140ms ease;
+      transition: background-color 150ms ease, color 150ms ease, transform 150ms ease, opacity 150ms ease;
     }
 
-    button:hover {
-      background: #2d4036;
+    .primary-button {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      margin-top: 21px;
+      background: var(--orange);
+      color: #24170f;
     }
 
-    button:active {
-      transform: translateY(1px);
+    .primary-button:hover { background: #ffb083; }
+
+    .primary-button:disabled {
+      background: #45372f;
+      color: #c0a99a;
+      cursor: default;
     }
 
-    button:focus-visible {
-      outline: 3px solid #17211c;
-      outline-offset: 4px;
+    .daily-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 3px 0 2px;
+    }
+
+    .quest-copy { min-width: 0; }
+
+    .quest-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 9px;
+      font-weight: 850;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .quest-label::before {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      content: "";
+    }
+
+    .quest-copy h3 {
+      margin: 0 0 7px;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .quest-copy p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+
+    .quest-reward {
+      gap: 9px;
+      margin-top: 15px;
+    }
+
+    .reward-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: #e5e9dd;
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .reward-chip.xp { color: var(--lime); }
+    .reward-chip.coin { color: #f3ce66; }
+
+    .complete-button {
+      min-width: 120px;
+      flex: 0 0 auto;
+      padding: 0 14px;
+      background: var(--lime);
+      color: #19220d;
+    }
+
+    .complete-button:hover:not(:disabled), .buy-button:hover:not(:disabled) { transform: translateY(-1px); }
+
+    .complete-button:disabled {
+      border: 1px solid #4b5d2e;
+      background: #293221;
+      color: var(--lime);
+      cursor: default;
+    }
+
+    .wallet-total { gap: 10px; color: #f3ce66; }
+
+    .coin-icon {
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #f3ce6677;
+      border-radius: 50%;
+      color: #f3ce66;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .wallet-total strong { font-size: 15px; }
+    .wallet-total span:last-child { color: var(--muted); font-size: 10px; }
+
+    .shop-list { display: grid; gap: 0; }
+
+    .shop-item {
+      min-height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 1px solid #30362e;
+    }
+
+    .shop-item:first-child { border-top: 0; }
+
+    .shop-item-info { min-width: 0; }
+
+    .shop-item-info strong {
+      display: block;
+      overflow: hidden;
+      margin-bottom: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .shop-cost { gap: 4px; color: #f3ce66; font-size: 9px; font-weight: 750; }
+
+    .buy-button {
+      min-width: 54px;
+      min-height: 29px;
+      flex: 0 0 auto;
+      padding: 0 9px;
+      background: #30382b;
+      color: var(--lime);
+      font-size: 9px;
+    }
+
+    .buy-button:disabled { background: #252925; color: #71796e; cursor: not-allowed; }
+
+    .weekly-panel .section-title { margin-bottom: 17px; }
+
+    .weekly-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(210px, 1fr);
+      gap: 26px;
+      align-items: center;
+    }
+
+    .workout-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+
+    .workout-row {
+      min-width: 0;
+      min-height: 71px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #171a17;
+    }
+
+    .workout-row strong { display: block; margin-bottom: 5px; font-size: 11px; }
+    .workout-row span { color: var(--muted); font-size: 9px; }
+
+    .workout-state {
+      min-width: 41px;
+      flex: 0 0 auto;
+      color: var(--quiet);
+      font-size: 8px;
+      font-weight: 850;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .workout-state.done { color: var(--lime); }
+
+    .workout-action {
+      min-width: 48px;
+      min-height: 26px;
+      border: 1px solid #455135;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--lime);
+      font-size: 9px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .workout-action:hover { background: #c8f36a14; }
+    .workout-action:disabled { border-color: transparent; color: var(--lime); cursor: default; }
+
+    .weekly-goal {
+      padding-left: 25px;
+      border-left: 1px solid var(--line);
+    }
+
+    .goal-line { justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+    .goal-line strong { font-size: 12px; }
+    .goal-line span { color: var(--muted); font-size: 10px; }
+    .goal-note { margin: 9px 0 0; color: var(--quiet); font-size: 9px; }
+
+    .toast {
+      position: fixed;
+      z-index: 5;
+      right: 24px;
+      bottom: 24px;
+      max-width: min(360px, calc(100vw - 32px));
+      padding: 13px 16px;
+      border: 1px solid #c8f36a55;
+      border-radius: 6px;
+      background: #22291d;
+      color: #f0f4e7;
+      font-size: 12px;
+      box-shadow: 0 12px 30px #0007;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.visible { opacity: 1; transform: translateY(0); }
+
+    button:focus-visible { outline: 2px solid #f2f4ed; outline-offset: 3px; }
+
+    @keyframes rise-in {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 780px) {
+      .app-shell { width: min(100% - 32px, 620px); padding-top: 20px; }
+      .topbar { margin-bottom: 31px; }
+      .xp-panel, .streak-panel, .daily-panel, .shop-panel { grid-column: span 12; }
+      .intro { align-items: start; flex-direction: column; gap: 10px; }
+      .intro-date { padding: 0; }
+      .streak-panel { min-height: 205px; }
+      .weekly-layout { grid-template-columns: 1fr; gap: 20px; }
+      .weekly-goal { padding: 17px 0 0; border-top: 1px solid var(--line); border-left: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .app-shell { width: calc(100% - 24px); padding-bottom: 32px; }
+      .topbar { margin-bottom: 26px; }
+      .season { gap: 7px; font-size: 9px; }
+      .dashboard-grid { gap: 11px; }
+      .xp-panel, .streak-panel, .daily-panel, .shop-panel, .weekly-panel { padding: 19px 17px; }
+      .profile-row { gap: 13px; }
+      .level-badge { width: 62px; height: 62px; }
+      .daily-content { align-items: start; flex-direction: column; }
+      .complete-button { width: 100%; }
+      .workout-list { grid-template-columns: 1fr; }
+      .workout-row { min-height: 62px; }
+      .weekly-panel { padding-bottom: 20px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
       }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Hello World</h1>
-    <button id="color-button" type="button">Change color</button>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Gym Quest">
+        <div class="brand-mark" aria-hidden="true">GQ</div>
+        <div class="brand-name">GYM <span>QUEST</span></div>
+      </div>
+      <div class="season"><span class="season-mark" aria-hidden="true"></span>Season 04 <span aria-hidden="true">/</span> Week 18</div>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Player dashboard</p>
+        <h1 id="page-title">READY FOR YOUR NEXT RUN?</h1>
+      </div>
+      <p class="intro-date" id="today-label"></p>
+    </section>
+
+    <div class="dashboard-grid">
+      <section class="panel xp-panel" aria-labelledby="level-heading">
+        <div class="section-title">
+          <h2 id="level-heading">PLAYER LEVEL</h2>
+          <span class="section-kicker">Training profile</span>
+        </div>
+        <div class="profile-row">
+          <div class="level-badge"><div><span id="level-value">7</span><small>Level</small></div></div>
+          <div class="player-info">
+            <h2>Gym Adventurer</h2>
+            <p>Every rep moves you forward.</p>
+          </div>
+        </div>
+        <div class="xp-line"><span>Experience</span><strong><span id="xp-current">420</span> / <span id="xp-total">600</span> XP</strong></div>
+        <div class="progress-track" role="progressbar" aria-label="Experience toward next level" aria-valuemin="0" aria-valuemax="600" aria-valuenow="420">
+          <div class="progress-fill" id="xp-progress"></div>
+        </div>
+        <p class="xp-footnote"><span id="xp-remaining">180</span> XP to Level <span id="next-level">8</span></p>
+      </section>
+
+      <section class="panel streak-panel" aria-labelledby="streak-heading">
+        <div class="streak-content">
+          <div class="section-title">
+            <h2 id="streak-heading">WORKOUT STREAK</h2>
+            <span class="section-kicker">Consistency pays off</span>
+          </div>
+          <div class="streak-number">
+            <svg class="flame-icon" viewBox="0 0 40 48" role="img" aria-label="Flame">
+              <path fill="currentColor" d="M22.5 1.5c1.9 8.8-2.3 11.2-1.3 17.1.5 2.8 2.3 4.2 4 4.8.8-3.4 3-6.7 6.1-8.6 2.4 5.1 6.2 10.1 6.2 17.1 0 9.1-7.3 15.6-17 15.6S2.8 41.2 2.8 32.7c0-6.2 3.5-11.9 9.2-16.7-.4 5.1 1.4 8.2 4 9.2C14.7 15.7 20 10.8 22.5 1.5Z"/>
+              <path fill="#ffd5a6" d="M20.2 28.1c.4 3.1-2.1 4.4-1.5 7.4.3 1.5 1.3 2.3 2.5 2.6.6-1.8 1.7-3.1 3.3-4.1 1.1 2.1 2.4 3.9 2.4 6.3 0 3.6-2.8 6.2-6.8 6.2s-6.7-2.6-6.7-5.9c0-2.6 1.6-4.9 4.2-7.1-.1 2.1.5 3.1 1.5 3.6-.6-3.1.2-5.8 1.1-9Z"/>
+            </svg>
+            <strong id="streak-value">4</strong>
+          </div>
+          <p class="streak-caption">days in a row. Keep the chain alive.</p>
+        </div>
+        <button class="primary-button" id="log-workout" type="button">Log today's workout <span aria-hidden="true">↗</span></button>
+      </section>
+
+      <section class="panel daily-panel" aria-labelledby="daily-heading">
+        <div class="section-title">
+          <h2 id="daily-heading">QUEST OF THE DAY</h2>
+          <span class="section-kicker">Resets daily</span>
+        </div>
+        <div class="daily-content">
+          <div class="quest-copy">
+            <span class="quest-label">Daily objective</span>
+            <h3>Finish today's scheduled workout</h3>
+            <p>Show up, finish strong, and collect your rewards.</p>
+            <div class="quest-reward" aria-label="Rewards: 80 XP and 35 Quest Coins">
+              <span class="reward-chip xp">✦ 80 XP</span>
+              <span class="reward-chip coin">◉ 35 QC</span>
+            </div>
+          </div>
+          <button class="complete-button" id="claim-quest" type="button">Complete quest</button>
+        </div>
+      </section>
+
+      <section class="panel shop-panel" aria-labelledby="shop-heading">
+        <div class="section-title">
+          <h2 id="shop-heading">QUEST SHOP</h2>
+          <div class="wallet-total"><span class="coin-icon" aria-hidden="true">Q</span><strong id="coin-balance">185</strong><span>QC</span></div>
+        </div>
+        <div class="shop-list" id="shop-list">
+          <div class="shop-item">
+            <div class="shop-item-info"><strong>Workout Streak Freeze</strong><span class="shop-cost">◉ 50 QC</span></div>
+            <button class="buy-button" type="button" data-buy="freeze" aria-label="Buy Workout Streak Freeze for 50 Quest Coins">Buy</button>
+          </div>
+          <div class="shop-item">
+            <div class="shop-item-info"><strong>Double XP Token</strong><span class="shop-cost">◉ 100 QC</span></div>
+            <button class="buy-button" type="button" data-buy="double-xp" aria-label="Buy Double XP Token for 100 Quest Coins">Buy</button>
+          </div>
+          <div class="shop-item">
+            <div class="shop-item-info"><strong>Mystery Gym Badge</strong><span class="shop-cost">◉ 150 QC</span></div>
+            <button class="buy-button" type="button" data-buy="badge" aria-label="Buy Mystery Gym Badge for 150 Quest Coins">Buy</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel weekly-panel" aria-labelledby="weekly-heading">
+        <div class="section-title">
+          <h2 id="weekly-heading">WEEKLY TRAINING QUESTS</h2>
+          <span class="section-kicker">Complete workouts to earn XP + QC</span>
+        </div>
+        <div class="weekly-layout">
+          <div class="workout-list" id="workout-list"></div>
+          <div class="weekly-goal">
+            <div class="goal-line"><strong>Weekly workout goal</strong><span><b id="weekly-count">2</b> / 4</span></div>
+            <div class="progress-track" role="progressbar" aria-label="Weekly workout goal" aria-valuemin="0" aria-valuemax="4" aria-valuenow="2">
+              <div class="progress-fill" id="weekly-progress" style="background:var(--blue);box-shadow:0 0 14px #83d3df52"></div>
+            </div>
+            <p class="goal-note">Finish 4 workouts this week to hit your target.</p>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const colorButton = document.querySelector("#color-button");
+    const STORAGE_KEY = "gym-quest-progress-v1";
+    const XP_PER_LEVEL = 600;
+    const DEFAULT_STATE = {
+      level: 7,
+      xp: 420,
+      coins: 185,
+      streak: 4,
+      weeklyWorkouts: 2,
+      completedWorkouts: { push: true, pull: true, legs: false },
+      questClaimedOn: null,
+      lastWorkoutDate: null
+    };
+    const WORKOUTS = [
+      { id: "push", name: "Push Day", detail: "Chest, shoulders + triceps" },
+      { id: "pull", name: "Pull Day", detail: "Back + biceps" },
+      { id: "legs", name: "Leg Day", detail: "Quads, hamstrings + glutes" }
+    ];
+    const SHOP_ITEMS = {
+      freeze: { name: "Workout Streak Freeze", cost: 50 },
+      "double-xp": { name: "Double XP Token", cost: 100 },
+      badge: { name: "Mystery Gym Badge", cost: 150 }
+    };
 
-    colorButton.addEventListener("click", () => {
-      const hue = Math.floor(Math.random() * 360);
-      document.body.style.setProperty("--page-background", `hsl(${hue} 52% 84%)`);
+    function loadState() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!stored || typeof stored !== "object") return { ...DEFAULT_STATE, completedWorkouts: { ...DEFAULT_STATE.completedWorkouts } };
+        return {
+          level: Math.max(1, Number(stored.level) || DEFAULT_STATE.level),
+          xp: Math.max(0, Number(stored.xp) || 0),
+          coins: Math.max(0, Number(stored.coins) || 0),
+          streak: Math.max(0, Number(stored.streak) || 0),
+          weeklyWorkouts: Math.max(0, Number(stored.weeklyWorkouts) || 0),
+          completedWorkouts: { ...DEFAULT_STATE.completedWorkouts, ...(stored.completedWorkouts || {}) },
+          questClaimedOn: typeof stored.questClaimedOn === "string" ? stored.questClaimedOn : null,
+          lastWorkoutDate: typeof stored.lastWorkoutDate === "string" ? stored.lastWorkoutDate : null
+        };
+      } catch {
+        return { ...DEFAULT_STATE, completedWorkouts: { ...DEFAULT_STATE.completedWorkouts } };
+      }
+    }
+
+    const state = loadState();
+    const today = new Date();
+    const todayKey = dateKey(today);
+    let toastTimer;
+
+    function dateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch {
+        showToast("Progress could not be saved in this browser.");
+      }
+    }
+
+    function awardXp(amount) {
+      state.xp += amount;
+      while (state.xp >= XP_PER_LEVEL) {
+        state.xp -= XP_PER_LEVEL;
+        state.level += 1;
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.querySelector("#toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("visible"), 2600);
+    }
+
+    function renderWorkouts() {
+      const list = document.querySelector("#workout-list");
+      list.replaceChildren(...WORKOUTS.map((workout) => {
+        const completed = Boolean(state.completedWorkouts[workout.id]);
+        const row = document.createElement("div");
+        row.className = "workout-row";
+        const info = document.createElement("div");
+        const name = document.createElement("strong");
+        const detail = document.createElement("span");
+        name.textContent = workout.name;
+        detail.textContent = workout.detail;
+        info.append(name, detail);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = completed ? "workout-action" : "workout-action";
+        button.dataset.workout = workout.id;
+        button.disabled = completed;
+        button.textContent = completed ? "Done" : "Complete";
+        button.setAttribute("aria-label", `${completed ? "Completed" : "Complete"} ${workout.name}`);
+        if (completed) button.classList.add("done");
+        row.append(info, button);
+        return row;
+      }));
+    }
+
+    function render() {
+      const xpProgress = Math.min(state.xp / XP_PER_LEVEL * 100, 100);
+      const weeklyProgress = Math.min(state.weeklyWorkouts / 4 * 100, 100);
+      document.querySelector("#level-value").textContent = state.level;
+      document.querySelector("#xp-current").textContent = state.xp;
+      document.querySelector("#xp-total").textContent = XP_PER_LEVEL;
+      document.querySelector("#xp-remaining").textContent = XP_PER_LEVEL - state.xp;
+      document.querySelector("#next-level").textContent = state.level + 1;
+      document.querySelector("#xp-progress").style.width = `${xpProgress}%`;
+      document.querySelector(".xp-panel [role='progressbar']").setAttribute("aria-valuenow", state.xp);
+      document.querySelector("#streak-value").textContent = state.streak;
+      document.querySelector("#coin-balance").textContent = state.coins;
+      document.querySelector("#weekly-count").textContent = Math.min(state.weeklyWorkouts, 4);
+      document.querySelector("#weekly-progress").style.width = `${weeklyProgress}%`;
+      document.querySelector(".weekly-goal [role='progressbar']").setAttribute("aria-valuenow", Math.min(state.weeklyWorkouts, 4));
+
+      const questClaimed = state.questClaimedOn === todayKey;
+      const claimButton = document.querySelector("#claim-quest");
+      claimButton.disabled = questClaimed;
+      claimButton.textContent = questClaimed ? "Quest complete" : "Complete quest";
+
+      const workoutButton = document.querySelector("#log-workout");
+      const workoutLogged = state.lastWorkoutDate === todayKey;
+      workoutButton.disabled = workoutLogged;
+      workoutButton.textContent = workoutLogged ? "Workout logged today" : "Log today's workout ↗";
+
+      document.querySelectorAll("[data-buy]").forEach((button) => {
+        button.disabled = state.coins < SHOP_ITEMS[button.dataset.buy].cost;
+      });
+      renderWorkouts();
+    }
+
+    document.querySelector("#claim-quest").addEventListener("click", () => {
+      if (state.questClaimedOn === todayKey) return;
+      state.questClaimedOn = todayKey;
+      awardXp(80);
+      state.coins += 35;
+      saveState();
+      render();
+      showToast("Quest complete: +80 XP and +35 QC");
     });
+
+    document.querySelector("#log-workout").addEventListener("click", () => {
+      if (state.lastWorkoutDate === todayKey) return;
+      if (state.lastWorkoutDate) {
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        state.streak = state.lastWorkoutDate === dateKey(yesterday) ? state.streak + 1 : 1;
+      } else {
+        state.streak += 1;
+      }
+      state.lastWorkoutDate = todayKey;
+      state.weeklyWorkouts += 1;
+      awardXp(40);
+      state.coins += 12;
+      saveState();
+      render();
+      showToast("Workout logged: +40 XP and +12 QC");
+    });
+
+    document.querySelector("#workout-list").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-workout]");
+      if (!button || state.completedWorkouts[button.dataset.workout]) return;
+      state.completedWorkouts[button.dataset.workout] = true;
+      state.weeklyWorkouts += 1;
+      awardXp(60);
+      state.coins += 20;
+      saveState();
+      render();
+      showToast(`${WORKOUTS.find((workout) => workout.id === button.dataset.workout).name} complete: +60 XP and +20 QC`);
+    });
+
+    document.querySelector("#shop-list").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-buy]");
+      if (!button) return;
+      const item = SHOP_ITEMS[button.dataset.buy];
+      if (state.coins < item.cost) {
+        showToast("Not enough Quest Coins for that reward.");
+        return;
+      }
+      state.coins -= item.cost;
+      saveState();
+      render();
+      showToast(`${item.name} purchased for ${item.cost} QC.`);
+    });
+
+    document.querySelector("#today-label").textContent = today.toLocaleDateString(undefined, {
+      weekday: "long", month: "long", day: "numeric"
+    });
+    render();
   </script>
 </body>
 </html>
